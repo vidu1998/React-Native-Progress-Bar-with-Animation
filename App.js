@@ -1,20 +1,79 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import {Platform, StyleSheet, Text, View, Animated,Alert} from 'react-native';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+export default class App extends Component {
+
+constructor()
+{
+super();
+
+this.state =
+{
+
+progressStatus: 0,
+
+}
+}
+anim = new Animated.Value(0);
+componentDidMount(){
+this.onAnimate();
+}
+onAnimate = () =>{
+this.anim.addListener(({value})=> {
+this.setState({progressStatus: parseInt(value,10)},this.mycode);
+});
+Animated.timing(this.anim,{
+toValue: 100,
+duration: 50000,
+}).start();
 }
 
+mycode=()=>{
+
+if( this.state.progressStatus == 100 ){
+
+Alert.alert("Successfull loading");
+}
+
+}
+
+render() {
+return (
+<View style={styles.container}>
+<Animated.View
+style={[
+styles.inner,{width: this.state.progressStatus +"%"},
+]}
+/>
+<Animated.Text style={styles.label}>
+{this.state.progressStatus }%
+</Animated.Text>
+</View>
+);
+}
+}
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+container: {
+width: "100%",
+height: 40,
+padding: 3,
+borderColor: "#FAA",
+borderWidth: 3,
+borderRadius: 30,
+marginTop: 200,
+justifyContent: "center",
+},
+inner:{
+width: "100%",
+height: 30,
+borderRadius: 15,
+backgroundColor:"green",
+},
+label:{
+fontSize:23,
+color: "black",
+position: "absolute",
+zIndex: 1,
+alignSelf: "center",
+}
 });
